@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Кнопка перехода к мобильному приложению. Тип узла списка 3.-->
+<ImageButton
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toMobileApplication"
+    android:layout_width="match_parent"
+    android:layout_height="35sp"
+    android:contentDescription="@string/open_on_mobile"
+    android:scaleType="fitCenter"
+    android:background="@null"
+    android:src="@drawable/ic_mail_ru_button" />
