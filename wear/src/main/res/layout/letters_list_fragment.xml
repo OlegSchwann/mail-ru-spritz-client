@@ -5,7 +5,6 @@
     android:id="@+id/lettersList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:textColor="@color/black"
-    android:background="@color/white"
+    android:scrollbars="none"
     tools:itemCount="20"
     tools:listitem="@layout/letters_list_one_letter" />

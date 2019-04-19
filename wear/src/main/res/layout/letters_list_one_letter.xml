@@ -5,14 +5,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".LetterAdapter">
+    tools:context=".letters_list.AdapterLetter">
     <!-- Отправитель. -->
     <TextView
         android:id="@+id/letter_from"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textColor="@color/black"
-        android:layout_marginStart="5sp"
+        android:layout_marginLeft="2sp"
+        android:layout_marginRight="2sp"
         android:ellipsize="end"
         android:text="@string/hello_blank_fragment" />
     <!-- Тема письма. -->
@@ -21,14 +21,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:ellipsize="end"
-        android:textColor="@color/black"
-        android:layout_marginStart="5sp"
+        android:layout_marginLeft="2sp"
+        android:layout_marginRight="2sp"
         android:text="@string/hello_blank_fragment" />
     <!-- Тонкая серая линия под двумя строчками для визуального разделения. -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="#e0e0e0"
-        android:layout_marginBottom="7sp"
-        android:layout_marginStart="5sp"/>
+        android:layout_marginBottom="2sp"
+        android:layout_marginLeft="2sp"
+        android:layout_marginRight="2sp" />
 </LinearLayout>

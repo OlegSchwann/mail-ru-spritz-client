@@ -8,5 +8,4 @@
     android:paddingTop="16sp"
     android:paddingBottom="16sp"
     android:text="@string/Inbox"
-    android:textAlignment="center"
-    android:textColor="@color/black" />
+    android:textAlignment="center"  />

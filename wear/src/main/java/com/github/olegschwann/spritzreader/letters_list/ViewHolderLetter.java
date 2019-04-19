@@ -1,8 +1,11 @@
-package com.github.olegschwann.spritzreader;
+package com.github.olegschwann.spritzreader.letters_list;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import com.github.olegschwann.spritzreader.Letter;
+import com.github.olegschwann.spritzreader.R;
 
 public class ViewHolderLetter extends RecyclerView.ViewHolder {
     private TextView letter_from;

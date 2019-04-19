@@ -6,9 +6,10 @@
     -->
     <string name="hello_world">Hello Square World!</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Inbox">Inbox</string>
-    <string name="open_on_mobile">Open list of letters on the phone.</string>
+    <string name="open_list_on_mobile">Open list of letters on phone.</string>
+    <string name="open_text_on_mobile">Open letter with attachments on phone.</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
 
 </resources>

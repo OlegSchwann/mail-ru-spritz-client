@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#202124"
     tools:context=".SpritzReader">
 
     <View
@@ -18,7 +19,7 @@
         android:layout_toLeftOf="@+id/spritz_center_letter"
         android:textSize="18sp"
         tools:ignore="RtlHardcoded"
-        tools:text="Подтвержд" />
+        android:text="Подтвержд" />
 
     <TextView
         android:id="@+id/spritz_center_letter"
@@ -28,20 +29,22 @@
         android:layout_centerVertical="true"
         android:textColor="@color/red"
         android:textSize="18sp"
-        tools:text="е" />
+        android:text="е" />
 
     <TextView
+        android:id="@+id/spritz_right_part"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/spritz_center_letter"
         android:textSize="18sp"
         tools:ignore="RtlHardcoded"
-        tools:text="ние"/>
+        android:text="ние" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_below="@id/spritz_center_letter"
         android:background="@color/grey" />
+
 </RelativeLayout>

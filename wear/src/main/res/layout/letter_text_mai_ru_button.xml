@@ -5,6 +5,7 @@
     android:id="@+id/toMobileApplication"
     android:layout_width="match_parent"
     android:layout_height="35sp"
+    android:layout_marginTop="25sp"
     android:contentDescription="@string/open_list_on_mobile"
     android:paddingTop="3sp"
     android:paddingBottom="3sp"

@@ -1,6 +1,6 @@
-package com.github.olegschwann.spritzreader;
+package com.github.olegschwann.spritzreader.letters_list;
 
-public final class LETTER_LIST {
+public final class LIST_TYPE {
     // Spritzreader/wear/src/main/res/layout/letters_list_header.xml
     public static final int HEADER = 1;
     // Spritzreader/wear/src/main/res/layout/letters_list_one_letter.xml
