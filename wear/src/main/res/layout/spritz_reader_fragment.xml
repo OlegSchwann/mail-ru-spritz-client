@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/spritz_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#202124"
-    tools:context=".SpritzReader">
+    tools:context=".spritz_reader.SpritzReader">
 
     <View
         android:layout_width="match_parent"
@@ -13,6 +14,7 @@
         android:background="@color/grey" />
 
     <TextView
+        android:id="@+id/spritz_left_part"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

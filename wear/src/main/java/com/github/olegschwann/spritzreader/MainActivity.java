@@ -8,6 +8,7 @@ import android.support.wearable.activity.WearableActivity;
 
 import com.github.olegschwann.spritzreader.letter_text.FragmentLetterText;
 import com.github.olegschwann.spritzreader.letters_list.FragmentLetterList;
+import com.github.olegschwann.spritzreader.spritz_reader.SpritzReader;
 
 public class MainActivity extends WearableActivity implements OnFragmentInteractionListener{
     // 3 screen fragments
@@ -37,9 +38,9 @@ public class MainActivity extends WearableActivity implements OnFragmentInteract
             this.spritzReader = new SpritzReader();
         }
 
-        showLetterList(false);
-//        showSpritzReader(false);
-//        showFullLetterText(false);
+//      showLetterList(false);
+        showSpritzReader(false);
+//      showFullLetterText(false);
     }
 
     // Сюда приходят все события от фрагментов. Паттерн router.
