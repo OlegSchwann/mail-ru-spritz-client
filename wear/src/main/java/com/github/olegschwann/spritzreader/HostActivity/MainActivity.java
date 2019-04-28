@@ -1,16 +1,18 @@
-package com.github.olegschwann.spritzreader;
+package com.github.olegschwann.spritzreader.HostActivity;
 
 import android.app.FragmentManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.FragmentTransaction;
+import android.support.annotation.Nullable;
 import android.support.wearable.activity.WearableActivity;
 
+import com.github.olegschwann.spritzreader.R;
 import com.github.olegschwann.spritzreader.letter_text.FragmentLetterText;
 import com.github.olegschwann.spritzreader.letters_list.FragmentLetterList;
 import com.github.olegschwann.spritzreader.spritz_reader.SpritzReader;
 
-public class MainActivity extends WearableActivity implements OnFragmentInteractionListener{
+public class MainActivity extends WearableActivity implements InteractionBus {
     // 3 screen fragments
     private FragmentLetterList fragmentLetterList;
     private FragmentLetterText fragmentLetterText;
@@ -78,5 +80,35 @@ public class MainActivity extends WearableActivity implements OnFragmentInteract
 
         }
         transaction.commit();
+    }
+
+    // TODO: implement.
+
+    @Override
+    public void transitionToListOfLetters(int letterId) {
+        if (letterId == 0) {
+            // открыть первое письмо.
+        }
+        throw new NoSuchFieldError();
+    }
+
+    @Override
+    public void transitionToTextOfLetter(int letterId, int sentenceIndex) {
+        throw new NoSuchFieldError();
+    }
+
+    @Override
+    public void transitionToSpritz(int letterId, int sentenceIndex) {
+        throw new NoSuchFieldError();
+    }
+
+    @Override
+    public void transitionToTextOfLetterOnPhone(int letterId) {
+        throw new NoSuchFieldError();
+    }
+
+    @Override
+    public void transitionToListOfLettersOnPhone() {
+        throw new NoSuchFieldError();
     }
 }

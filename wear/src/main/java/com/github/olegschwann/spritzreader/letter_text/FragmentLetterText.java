@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.olegschwann.spritzreader.OnFragmentInteractionListener;
+import com.github.olegschwann.spritzreader.HostActivity.InteractionBus;
 import com.github.olegschwann.spritzreader.R;
 import com.github.olegschwann.spritzreader.TestData;
 
@@ -29,7 +29,7 @@ public class FragmentLetterText extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private InteractionBus mListener;
 
     public FragmentLetterText() {
         // Required empty public constructor
@@ -80,18 +80,18 @@ public class FragmentLetterText extends Fragment {
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof InteractionBus) {
+            mListener = (InteractionBus) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement InteractionBus");
         }
     }
 

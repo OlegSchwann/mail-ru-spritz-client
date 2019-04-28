@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.github.olegschwann.spritzreader.OnFragmentInteractionListener;
+import com.github.olegschwann.spritzreader.HostActivity.InteractionBus;
 import com.github.olegschwann.spritzreader.R;
 import com.github.olegschwann.spritzreader.TestData;
 
@@ -27,7 +27,7 @@ public class FragmentLetterList extends Fragment {
     private ImageButton toMobileApplication;
 
     // Ссылка на Activity, через которую фрагменты меняют экраы приложения.
-    private OnFragmentInteractionListener mListener;
+    private InteractionBus mListener;
 
     public FragmentLetterList() {
         // Required empty public constructor
@@ -62,18 +62,18 @@ public class FragmentLetterList extends Fragment {
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof InteractionBus) {
+            mListener = (InteractionBus) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement InteractionBus");
         }
     }
 

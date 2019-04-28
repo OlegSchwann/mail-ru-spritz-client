@@ -7,19 +7,20 @@ import android.app.Fragment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.wear.widget.SwipeDismissFrameLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.olegschwann.spritzreader.OnFragmentInteractionListener;
+import com.github.olegschwann.spritzreader.HostActivity.InteractionBus;
 import com.github.olegschwann.spritzreader.R;
 
 
 public class SpritzReader extends Fragment {
     public static final String TAG = "SpritzReaderFragment";
 
-    private OnFragmentInteractionListener mListener;
+    private InteractionBus mListener;
 
     // источник, выдающий слова письма по одному.
     private WordProvider words;
@@ -28,6 +29,7 @@ public class SpritzReader extends Fragment {
     private TextView centerLetter;
     private TextView rightPart;
     private View spritzScreen;
+    private SwipeDismissFrameLayout swipeDismiss;
 
     private Handler timerHandler;
     // время демонстрации 1 слова в миллисекундах.
@@ -145,7 +147,9 @@ public class SpritzReader extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         this.leftPart = (TextView) view.findViewById(R.id.spritz_left_part);
+
         this.centerLetter = (TextView) view.findViewById(R.id.spritz_center_letter);
+
         this.rightPart = (TextView) view.findViewById(R.id.spritz_right_part);
 
         this.spritzScreen = (View) view.findViewById(R.id.spritz_screen);
@@ -154,6 +158,9 @@ public class SpritzReader extends Fragment {
                 this.stopOrStartDemonstration,
                 this.toNextSentence
         ));
+
+        this.swipeDismiss = view.findViewById(R.id.spritz_swipe_dismiss_root);
+        this.swipeDismiss.addCallback(new DismissCallback());
 
         mChangeToNextWord(); // устанавливаем первое слово письма.
         // TODO:  добавить анимацию в начале чтения, как на spritz.com
@@ -165,18 +172,18 @@ public class SpritzReader extends Fragment {
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof InteractionBus) {
+            mListener = (InteractionBus) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement InteractionBus");
         }
     }
 

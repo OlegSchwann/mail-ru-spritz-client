@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".letters_list.AdapterLetter">
+
     <!-- Отправитель. -->
     <TextView
         android:id="@+id/letter_from"
@@ -15,6 +16,7 @@
         android:layout_marginRight="2sp"
         android:ellipsize="end"
         android:text="@string/hello_blank_fragment" />
+
     <!-- Тема письма. -->
     <TextView
         android:id="@+id/letter_subject"
@@ -24,6 +26,7 @@
         android:layout_marginLeft="2sp"
         android:layout_marginRight="2sp"
         android:text="@string/hello_blank_fragment" />
+
     <!-- Тонкая серая линия под двумя строчками для визуального разделения. -->
     <View
         android:layout_width="match_parent"
