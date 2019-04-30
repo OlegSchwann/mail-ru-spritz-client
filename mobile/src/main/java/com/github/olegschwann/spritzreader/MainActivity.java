@@ -2,6 +2,7 @@ package com.github.olegschwann.spritzreader;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.github.olegschwann.spritzreader.repo.AuthRepo;
 
 import ru.mail.auth.sdk.AuthError;
 import ru.mail.auth.sdk.AuthResult;
@@ -18,19 +21,16 @@ import ru.mail.auth.sdk.ui.MailRuLoginButton;
 
 public class MainActivity extends AppCompatActivity {
 
+    private AuthRepo mAuthRepo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        MailRuAuthSdk.initialize(getApplicationContext());
-        Button loginBtn = findViewById(R.id.loginButton);
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MailRuAuthSdk.getInstance().startLogin(MainActivity.this);
-            }
-        });
+        mAuthRepo = new AuthRepo(getApplicationContext());
+        if (!mAuthRepo.isLoggedIn()) {
+            mAuthRepo.startLoginFlow(this);
+        }
     }
 
     @Override
@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         if(!MailRuAuthSdk.getInstance().handleActivityResult(requestCode, resultCode, data, new MailRuCallback<AuthResult, AuthError>() {
             @Override
             public void onResult(AuthResult result) {
+                mAuthRepo.saveResult(result);
                 Toast.makeText(MainActivity.this, "Success " + result.getAuthCode(), Toast.LENGTH_LONG).show();
             }
 
