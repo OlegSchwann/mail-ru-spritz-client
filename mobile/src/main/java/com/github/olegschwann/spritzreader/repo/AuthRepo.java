@@ -3,6 +3,8 @@ package com.github.olegschwann.spritzreader.repo;
 import android.app.Activity;
 import android.content.Context;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.github.olegschwann.spritzreader.MainActivity;
 
@@ -16,8 +18,17 @@ public class AuthRepo {
     public static final String AUTH_CODE = "authCode";
 
     private final Context mContext;
+    private static AuthRepo mRepo;
 
-    public AuthRepo(Context context) {
+    public static AuthRepo getInstance(Context context) {
+        if (mRepo == null) {
+            Log.d("MY_APP", "New repo created");
+            mRepo = new AuthRepo(context);
+        }
+        return mRepo;
+    }
+
+    private AuthRepo(Context context) {
         mContext = context;
     }
 
@@ -25,9 +36,14 @@ public class AuthRepo {
         return PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(IS_LOGGED_IN, false);
     }
 
-    public void startLoginFlow(Activity activity) {
+    public void logout() {
+        PreferenceManager.getDefaultSharedPreferences(mContext).edit()
+                .putBoolean(IS_LOGGED_IN, false).apply();
+    }
+
+    public void startLoginFlow(Fragment fragment) {
         MailRuAuthSdk.initialize(mContext);
-        MailRuAuthSdk.getInstance().startLogin(activity);
+        MailRuAuthSdk.getInstance().startLogin(fragment);
     }
 
     public void saveResult(AuthResult result) {
