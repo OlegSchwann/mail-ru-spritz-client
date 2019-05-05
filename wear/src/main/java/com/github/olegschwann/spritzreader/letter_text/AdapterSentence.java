@@ -3,13 +3,11 @@ package com.github.olegschwann.spritzreader.letter_text;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.olegschwann.spritzreader.R;
-import com.github.olegschwann.spritzreader.TestData;
 
 public class AdapterSentence extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

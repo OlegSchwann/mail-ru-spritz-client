@@ -1,7 +1,6 @@
 package com.github.olegschwann.spritzreader.spritz_reader;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
@@ -13,46 +12,50 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.olegschwann.spritzreader.HostActivity.InteractionBus;
+import com.github.olegschwann.spritzreader.host_activity.InteractionBus;
 import com.github.olegschwann.spritzreader.R;
 
 
-public class SpritzReader extends Fragment {
+public class FragmentSpritzReader extends Fragment {
     public static final String TAG = "SpritzReaderFragment";
 
     private InteractionBus mListener;
 
-    // источник, выдающий слова письма по одному.
+    // Итератор, выдающий слова письма по одному для отображения.
+    // Содержит логику перемещения между предложениями.
     private WordProvider words;
 
+    // Видимые элементы интерфейса.
     private TextView leftPart;
     private TextView centerLetter;
     private TextView rightPart;
     private View spritzScreen;
     private SwipeDismissFrameLayout swipeDismiss;
 
+    // Очередь, управляющая событиями времени.
+    // Ей ставятся задачи "вызови это через секунду."
     private Handler timerHandler;
-    // время демонстрации 1 слова в миллисекундах.
+
+    // Время демонстрации 1 слова в миллисекундах.
     private int delay;
 
-    // статус: включена ли демонстрация в данный момент.
+    // Статус отображения: включена ли демонстрация в данный момент.
     private boolean demonstrationActive;
 
-    // Функция обратного вызова для перерисовки экрана Spritz.
-    // Вызывая WordProvider.next(), двигает на 1 слово вперёд текст письма.
+    // Функция для перерисовки экрана Spritz.
+    // Вызывает WordProvider.next(), двигает на 1 слово вперёд текст письма.
     private Runnable changeToNextWord;
 
     // Продвигает предложение на 1 вверх.
     private Runnable toPreviousSentence;
 
-    // Останавливает демонстрацию spritz, если она есть в данный момент.
-    // или наоборот, включает.
+    // Останавливает / включает демонстрацию Spritz, меняя состояние на противоположное.
     private Runnable stopOrStartDemonstration;
 
     // Продвигает предложение на 1 вниз.
     private Runnable toNextSentence;
 
-    public SpritzReader() {
+    public FragmentSpritzReader() {
         // Required empty public constructor
     }
 
@@ -76,11 +79,11 @@ public class SpritzReader extends Fragment {
             @Override
             public void run() {
                 words.toPreviousSentence();
-                if(demonstrationActive){
+                if (demonstrationActive) {
                     timerHandler.removeCallbacks(changeToNextWord);
                 }
                 mChangeToNextWord();
-                if(demonstrationActive){
+                if (demonstrationActive) {
                     timerHandler.postDelayed(changeToNextWord, 800);
                 }
             }
@@ -89,7 +92,7 @@ public class SpritzReader extends Fragment {
         this.stopOrStartDemonstration = new Runnable() {
             @Override
             public void run() {
-                if(demonstrationActive){
+                if (demonstrationActive) {
                     timerHandler.removeCallbacks(changeToNextWord);
                 } else {
                     timerHandler.postDelayed(changeToNextWord, 800);
@@ -102,18 +105,18 @@ public class SpritzReader extends Fragment {
             @Override
             public void run() {
                 words.toNextSentence();
-                if(demonstrationActive){
+                if (demonstrationActive) {
                     timerHandler.removeCallbacks(changeToNextWord);
                 }
                 mChangeToNextWord();
-                if(demonstrationActive){
+                if (demonstrationActive) {
                     timerHandler.postDelayed(changeToNextWord, 800);
                 }
             }
         };
 
         // TODO: нормальный внутренний интерфейс инициализации фрагмента, параметризуемый данными письма.
-        this.delay = 60*1000/500;
+        this.delay = 60 * 1000 / 500;
     }
 
     private int mChangeToNextWord() {
@@ -127,7 +130,7 @@ public class SpritzReader extends Fragment {
                 wordDelay *= word.delay;
             }
             return wordDelay;
-        } catch (WordProvider.NoSuchWordException e){
+        } catch (WordProvider.NoSuchWordException e) {
             leftPart.setText(e.lastExistingWord.left); // text can be null
             centerLetter.setText(e.lastExistingWord.center);
             rightPart.setText(e.lastExistingWord.right);
@@ -167,13 +170,6 @@ public class SpritzReader extends Fragment {
         // Она должна сфокусировать человека посередине экрана.
         demonstrationActive = true;
         timerHandler.postDelayed(this.changeToNextWord, 800);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-
-        }
     }
 
     @Override

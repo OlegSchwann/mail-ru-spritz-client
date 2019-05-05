@@ -1,4 +1,4 @@
-package com.github.olegschwann.spritzreader.HostActivity;
+package com.github.olegschwann.spritzreader.host_activity;
 
 import android.support.annotation.Nullable;
 

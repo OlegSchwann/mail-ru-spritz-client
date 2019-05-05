@@ -1,22 +1,21 @@
-package com.github.olegschwann.spritzreader.HostActivity;
+package com.github.olegschwann.spritzreader.host_activity;
 
 import android.app.FragmentManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.FragmentTransaction;
-import android.support.annotation.Nullable;
 import android.support.wearable.activity.WearableActivity;
 
 import com.github.olegschwann.spritzreader.R;
 import com.github.olegschwann.spritzreader.letter_text.FragmentLetterText;
 import com.github.olegschwann.spritzreader.letters_list.FragmentLetterList;
-import com.github.olegschwann.spritzreader.spritz_reader.SpritzReader;
+import com.github.olegschwann.spritzreader.spritz_reader.FragmentSpritzReader;
 
 public class MainActivity extends WearableActivity implements InteractionBus {
     // 3 screen fragments
     private FragmentLetterList fragmentLetterList;
     private FragmentLetterText fragmentLetterText;
-    private SpritzReader spritzReader;
+    private FragmentSpritzReader spritzReader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +34,14 @@ public class MainActivity extends WearableActivity implements InteractionBus {
             this.fragmentLetterText = new FragmentLetterText();
         }
 
-        this.spritzReader = (SpritzReader) fragmentManager.findFragmentByTag(SpritzReader.TAG);
+        this.spritzReader = (FragmentSpritzReader) fragmentManager.findFragmentByTag(FragmentSpritzReader.TAG);
         if (this.spritzReader == null) {
-            this.spritzReader = new SpritzReader();
+            this.spritzReader = new FragmentSpritzReader();
         }
 
-//      showLetterList(false);
+//        showLetterList(false);
         showSpritzReader(false);
-//      showFullLetterText(false);
+//        showFullLetterText(false);
     }
 
     // Сюда приходят все события от фрагментов. Паттерн router.
@@ -74,9 +73,9 @@ public class MainActivity extends WearableActivity implements InteractionBus {
 
     private void showSpritzReader(boolean addToHistory) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, this.spritzReader, SpritzReader.TAG);
+        transaction.replace(R.id.content, this.spritzReader, FragmentSpritzReader.TAG);
         if (addToHistory){
-            transaction.addToBackStack(SpritzReader.TAG);
+            transaction.addToBackStack(FragmentSpritzReader.TAG);
 
         }
         transaction.commit();

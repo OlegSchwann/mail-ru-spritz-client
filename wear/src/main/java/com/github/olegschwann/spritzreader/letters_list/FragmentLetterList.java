@@ -13,9 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.github.olegschwann.spritzreader.HostActivity.InteractionBus;
+import com.github.olegschwann.spritzreader.host_activity.InteractionBus;
 import com.github.olegschwann.spritzreader.R;
-import com.github.olegschwann.spritzreader.TestData;
+import com.github.olegschwann.spritzreader.OldTestData;
 
 
 public class FragmentLetterList extends Fragment {
@@ -54,7 +54,7 @@ public class FragmentLetterList extends Fragment {
         CustomScrollingLayoutCallback customScrollingLayoutCallback = new CustomScrollingLayoutCallback();
         WearableLinearLayoutManager layoutManager = new WearableLinearLayoutManager(view.getContext(), customScrollingLayoutCallback);
         this.lettersRecyclerView.setLayoutManager(layoutManager);
-        this.lettersRecyclerView.setAdapter(new AdapterLetter(view.getContext(), TestData.FromSubject));
+        this.lettersRecyclerView.setAdapter(new AdapterLetter(view.getContext(), OldTestData.FromSubject));
 
         // this.toMobileApplication = (ImageButton) view.findViewById(R.id.toMobileApplication);
     }

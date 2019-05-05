@@ -11,9 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.olegschwann.spritzreader.HostActivity.InteractionBus;
+import com.github.olegschwann.spritzreader.host_activity.InteractionBus;
 import com.github.olegschwann.spritzreader.R;
-import com.github.olegschwann.spritzreader.TestData;
+import com.github.olegschwann.spritzreader.OldTestData;
 
 
 public class FragmentLetterText extends Fragment {
@@ -72,7 +72,7 @@ public class FragmentLetterText extends Fragment {
         this.sentenceRecyclerView.setHasFixedSize(false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         this.sentenceRecyclerView.setLayoutManager(layoutManager);
-        this.sentenceRecyclerView.setAdapter(new AdapterSentence(view.getContext(), TestData.Sentenses));
+        this.sentenceRecyclerView.setAdapter(new AdapterSentence(view.getContext(), OldTestData.Sentenses));
 
 
     }
