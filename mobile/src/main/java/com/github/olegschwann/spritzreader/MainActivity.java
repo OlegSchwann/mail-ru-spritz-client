@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.github.olegschwann.spritzreader.repo.AuthRepo;
+import com.github.olegschwann.spritzreader.conversion.ConvertionTask;
 
 import ru.mail.auth.sdk.AuthError;
 import ru.mail.auth.sdk.AuthResult;
