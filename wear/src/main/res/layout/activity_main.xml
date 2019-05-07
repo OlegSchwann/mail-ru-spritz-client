@@ -6,4 +6,5 @@
     android:layout_height="match_parent" >
 
     <!--Frame for all fragments.-->
+
 </FrameLayout>

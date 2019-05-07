@@ -1,69 +1,95 @@
 package com.github.olegschwann.spritzreader.spritz_reader;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.wear.widget.SwipeDismissFrameLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.olegschwann.spritzreader.OnFragmentInteractionListener;
+import com.github.olegschwann.spritzreader.Types.NullBundleException;
+import com.github.olegschwann.spritzreader.host_activity.InteractionBus;
 import com.github.olegschwann.spritzreader.R;
 
 
-public class SpritzReader extends Fragment {
+public class FragmentSpritzReader extends Fragment {
     public static final String TAG = "SpritzReaderFragment";
 
-    private OnFragmentInteractionListener mListener;
+    private InteractionBus mListener;
 
-    // источник, выдающий слова письма по одному.
-    private WordProvider words;
+    // Данные, которые будут отображаться на экране.
+    private Words words;
 
+    // Итератор, выдающий слова письма по одному для отображения.
+    // Содержит логику перемещения между предложениями.
+    private WordProvider wordProvider;
+
+    // Видимые элементы интерфейса.
     private TextView leftPart;
     private TextView centerLetter;
     private TextView rightPart;
     private View spritzScreen;
+    private SwipeDismissFrameLayout swipeDismiss;
 
+    // Очередь, управляющая событиями времени.
+    // Ей ставятся задачи "вызови это через секунду."
     private Handler timerHandler;
-    // время демонстрации 1 слова в миллисекундах.
+
+    // Время демонстрации 1 слова в миллисекундах.
     private int delay;
 
-    // статус: включена ли демонстрация в данный момент.
+    // Статус отображения: включена ли демонстрация в данный момент.
     private boolean demonstrationActive;
 
-    // Функция обратного вызова для перерисовки экрана Spritz.
-    // Вызывая WordProvider.next(), двигает на 1 слово вперёд текст письма.
+    // Функция для перерисовки экрана Spritz.
+    // Вызывает WordProvider.next(), двигает на 1 слово вперёд текст письма.
     private Runnable changeToNextWord;
 
     // Продвигает предложение на 1 вверх.
     private Runnable toPreviousSentence;
 
-    // Останавливает демонстрацию spritz, если она есть в данный момент.
-    // или наоборот, включает.
+    // Останавливает / включает демонстрацию Spritz, меняя состояние на противоположное.
     private Runnable stopOrStartDemonstration;
 
     // Продвигает предложение на 1 вниз.
     private Runnable toNextSentence;
 
-    public SpritzReader() {
+    public FragmentSpritzReader() {
         // Required empty public constructor
     }
 
+    public void setWordsAndDelay(Words words, int delay) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Words.TAG, words);
+        bundle.putInt("delay", delay);
+        setArguments(bundle);
+    }
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.words = new WordProvider();
+        // region Recovery
+        Bundle bundle = getArguments();
+        if (bundle == null) {
+            throw new NullBundleException("Necessary to parameterize FragmentSpritzReader with setWordsAndDelay()");
+        }
+
+        this.words = bundle.getParcelable(Words.TAG);
+        this.delay = bundle.getInt("delay");
+        // endregion
+
+        this.wordProvider = new WordProvider(this.words);
         this.timerHandler = new Handler();
 
         this.changeToNextWord = new Runnable() {
             @Override
             public void run() {
-                int wordDelay = mChangeToNextWord();
+                int wordDelay = changeToNextWord();
                 if (demonstrationActive) {
                     timerHandler.postDelayed(this, wordDelay);
                 }
@@ -73,12 +99,12 @@ public class SpritzReader extends Fragment {
         this.toPreviousSentence = new Runnable() {
             @Override
             public void run() {
-                words.toPreviousSentence();
-                if(demonstrationActive){
+                wordProvider.toPreviousSentence();
+                if (demonstrationActive) {
                     timerHandler.removeCallbacks(changeToNextWord);
                 }
-                mChangeToNextWord();
-                if(demonstrationActive){
+                changeToNextWord();
+                if (demonstrationActive) {
                     timerHandler.postDelayed(changeToNextWord, 800);
                 }
             }
@@ -87,7 +113,7 @@ public class SpritzReader extends Fragment {
         this.stopOrStartDemonstration = new Runnable() {
             @Override
             public void run() {
-                if(demonstrationActive){
+                if (demonstrationActive) {
                     timerHandler.removeCallbacks(changeToNextWord);
                 } else {
                     timerHandler.postDelayed(changeToNextWord, 800);
@@ -99,24 +125,21 @@ public class SpritzReader extends Fragment {
         this.toNextSentence = new Runnable() {
             @Override
             public void run() {
-                words.toNextSentence();
-                if(demonstrationActive){
+                wordProvider.toNextSentence();
+                if (demonstrationActive) {
                     timerHandler.removeCallbacks(changeToNextWord);
                 }
-                mChangeToNextWord();
-                if(demonstrationActive){
+                changeToNextWord();
+                if (demonstrationActive) {
                     timerHandler.postDelayed(changeToNextWord, 800);
                 }
             }
         };
-
-        // TODO: нормальный внутренний интерфейс инициализации фрагмента, параметризуемый данными письма.
-        this.delay = 60*1000/500;
     }
 
-    private int mChangeToNextWord() {
+    private int changeToNextWord() {
         try {
-            Word word = words.next();
+            Word word = wordProvider.next();
             leftPart.setText(word.left); // text can be null
             centerLetter.setText(word.center);
             rightPart.setText(word.right);
@@ -125,7 +148,7 @@ public class SpritzReader extends Fragment {
                 wordDelay *= word.delay;
             }
             return wordDelay;
-        } catch (WordProvider.NoSuchWordException e){
+        } catch (WordProvider.NoSuchWordException e) {
             leftPart.setText(e.lastExistingWord.left); // text can be null
             centerLetter.setText(e.lastExistingWord.center);
             rightPart.setText(e.lastExistingWord.right);
@@ -145,7 +168,9 @@ public class SpritzReader extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         this.leftPart = (TextView) view.findViewById(R.id.spritz_left_part);
+
         this.centerLetter = (TextView) view.findViewById(R.id.spritz_center_letter);
+
         this.rightPart = (TextView) view.findViewById(R.id.spritz_right_part);
 
         this.spritzScreen = (View) view.findViewById(R.id.spritz_screen);
@@ -155,28 +180,24 @@ public class SpritzReader extends Fragment {
                 this.toNextSentence
         ));
 
-        mChangeToNextWord(); // устанавливаем первое слово письма.
+        this.swipeDismiss = view.findViewById(R.id.spritz_swipe_dismiss_root);
+        this.swipeDismiss.addCallback(new DismissCallback());
+
+        changeToNextWord(); // устанавливаем первое слово письма.
         // TODO:  добавить анимацию в начале чтения, как на spritz.com
         // Она должна сфокусировать человека посередине экрана.
         demonstrationActive = true;
         timerHandler.postDelayed(this.changeToNextWord, 800);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof InteractionBus) {
+            mListener = (InteractionBus) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement InteractionBus");
         }
     }
 

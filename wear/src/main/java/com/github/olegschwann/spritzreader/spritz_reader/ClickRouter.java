@@ -23,7 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class ClickRouter implements View.OnTouchListener {
-    private Runnable[] сallMatrix;
+    private Runnable[] callMatrix;
 
     ClickRouter(
             Runnable toPreviousSentence,
@@ -35,7 +35,7 @@ public class ClickRouter implements View.OnTouchListener {
             public void run() {
             }
         };
-        this.сallMatrix = new Runnable[]{
+        this.callMatrix = new Runnable[]{
                 toPreviousSentence, toPreviousSentence, toPreviousSentence, toPreviousSentence,
                 nullRunnable,
                 stopDemonstration, stopDemonstration, stopDemonstration,
@@ -47,9 +47,10 @@ public class ClickRouter implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN){
-            this.сallMatrix[
-                    (int)(event.getY() / v.getHeight() * this.сallMatrix.length)
+        v.performClick();  // Provides event ascent for third-party handlers.
+        if (event.getAction() == MotionEvent.ACTION_UP){
+            this.callMatrix[
+                    (int)(event.getY() / v.getHeight() * this.callMatrix.length)
             ].run();
         }
         return true;

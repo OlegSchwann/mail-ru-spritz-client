@@ -1,52 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.wear.widget.SwipeDismissFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/spritz_screen"
+    android:id="@+id/spritz_swipe_dismiss_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".spritz_reader.SpritzReader">
+    android:layout_height="match_parent">
 
-    <View
+    <RelativeLayout
+        android:id="@+id/spritz_screen"
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_above="@id/spritz_center_letter"
-        android:background="@color/grey" />
+        android:layout_height="match_parent"
+        tools:context=".spritz_reader.FragmentSpritzReader">
 
-    <TextView
-        android:id="@+id/spritz_left_part"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/spritz_center_letter"
-        android:textSize="18sp"
-        tools:ignore="RtlHardcoded"
-        android:text="Подтвержд" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_above="@id/spritz_center_letter"
+            android:background="@color/grey" />
 
-    <TextView
-        android:id="@+id/spritz_center_letter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:textColor="@color/red"
-        android:textSize="18sp"
-        android:text="е" />
+        <TextView
+            android:id="@+id/spritz_left_part"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/spritz_center_letter"
+            android:text="Чт"
+            android:textSize="18sp"
+            tools:ignore="HardcodedText,RtlHardcoded" />
 
-    <TextView
-        android:id="@+id/spritz_right_part"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/spritz_center_letter"
-        android:textSize="18sp"
-        tools:ignore="RtlHardcoded"
-        android:text="ние" />
+        <TextView
+            android:id="@+id/spritz_center_letter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="е"
+            android:textColor="@color/red"
+            android:textSize="18sp"
+            tools:ignore="HardcodedText" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_below="@id/spritz_center_letter"
-        android:background="@color/grey" />
+        <TextView
+            android:id="@+id/spritz_right_part"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/spritz_center_letter"
+            android:text="ние"
+            android:textSize="18sp"
+            tools:ignore="HardcodedText,RtlHardcoded" />
 
-</RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@id/spritz_center_letter"
+            android:background="@color/grey" />
+
+    </RelativeLayout>
+
+</android.support.wear.widget.SwipeDismissFrameLayout>

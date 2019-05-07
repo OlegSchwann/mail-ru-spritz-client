@@ -1,7 +1,6 @@
 package com.github.olegschwann.spritzreader.letters_list;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
@@ -13,9 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.github.olegschwann.spritzreader.OnFragmentInteractionListener;
+import com.github.olegschwann.spritzreader.Types.NullBundleException;
+import com.github.olegschwann.spritzreader.database.LettersHeaders;
+import com.github.olegschwann.spritzreader.host_activity.InteractionBus;
 import com.github.olegschwann.spritzreader.R;
-import com.github.olegschwann.spritzreader.TestData;
 
 
 public class FragmentLetterList extends Fragment {
@@ -23,19 +23,39 @@ public class FragmentLetterList extends Fragment {
 
     // Список всех писем.
     private WearableRecyclerView lettersRecyclerView;
+
     // Синяя кнопка с логотипом mail.ru, открывает список писем в приложении на телефоне.
     private ImageButton toMobileApplication;
 
     // Ссылка на Activity, через которую фрагменты меняют экраы приложения.
-    private OnFragmentInteractionListener mListener;
+    private InteractionBus mListener;
+
+    // Заголовки писем, которые надо отобразить.
+    private LettersHeaders data;
+
 
     public FragmentLetterList() {
         // Required empty public constructor
     }
 
+    // Внешний интерфейс фрагмента, используется для параметризации
+    // _до_ отрисовки экрана. Принимает список заголовков писем.
+    // Что бы их можно было запихать в android.os.Bundle,
+    // все структуры из базы данных реализуют Parcelable.
+    public void setData(LettersHeaders data) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(LettersHeaders.TAG, data);
+        setArguments(bundle);
+    }
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if (bundle == null) {
+            throw new NullBundleException("Necessary to parameterize FragmentLetterList with setData()");
+        }
+        this.data = bundle.getParcelable(LettersHeaders.TAG);
     }
 
     @Override
@@ -54,26 +74,18 @@ public class FragmentLetterList extends Fragment {
         CustomScrollingLayoutCallback customScrollingLayoutCallback = new CustomScrollingLayoutCallback();
         WearableLinearLayoutManager layoutManager = new WearableLinearLayoutManager(view.getContext(), customScrollingLayoutCallback);
         this.lettersRecyclerView.setLayoutManager(layoutManager);
-        this.lettersRecyclerView.setAdapter(new AdapterLetter(view.getContext(), TestData.FromSubject));
 
-        // this.toMobileApplication = (ImageButton) view.findViewById(R.id.toMobileApplication);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        this.lettersRecyclerView.setAdapter(new AdapterLetter(this.data));
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof InteractionBus) {
+            mListener = (InteractionBus) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement InteractionBus");
         }
     }
 
