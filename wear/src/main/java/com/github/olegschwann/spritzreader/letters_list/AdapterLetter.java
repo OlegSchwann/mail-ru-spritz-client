@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.github.olegschwann.spritzreader.R;
 import com.github.olegschwann.spritzreader.database.LettersHeaders;
 
-// https://stackoverflow.com/questions/26245139/how-to-create-recyclerview-with-multiple-view-type
 
 public class AdapterLetter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private LettersHeaders letters;
@@ -23,6 +22,8 @@ public class AdapterLetter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.letters = data;
     }
 
+    // Позволяет поддерживать 3 типа элементов в списке.
+    // https://stackoverflow.com/questions/26245139/how-to-create-recyclerview-with-multiple-view-type
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
