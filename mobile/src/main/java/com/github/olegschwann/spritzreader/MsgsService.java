@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MsgsService extends Service {
 
+    private final int mRefreshDelay = 5;
     private Thread mWorkingThread;
 
     @Override
@@ -27,18 +28,6 @@ public class MsgsService extends Service {
         startObserving();
         return super.onStartCommand(intent, flags, startId);
     }
-
-    /*@Override
-    public void onHandleIntent(Intent intent) {
-        while (true) {
-            try {
-                Log.d("MY_SERVICE", "IN HANDLE");
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -59,10 +48,9 @@ public class MsgsService extends Service {
         mWorkingThread = new Thread(new Runnable() {
             public void run() {
                 while (!mWorkingThread.isInterrupted()) {
-                    MsgsRepo.getInstance(getApplicationContext()).getStatus();
-                    Log.d("MY_SERVICE", "i = IN THREAD");
+                    MsgsRepo.getInstance(getApplicationContext()).refresh();
                     try {
-                        TimeUnit.SECONDS.sleep(5);
+                        TimeUnit.SECONDS.sleep(mRefreshDelay);
                     } catch (InterruptedException e) {
                         break;
                     }

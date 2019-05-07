@@ -12,21 +12,30 @@ public interface StatusApi {
         public String email;
         public int last_modified;
 
-        public List<MsgStatusPlain> messages;
+        public StatusBodyPlain body;
 
         @Override
         public String toString() {
             return "STATUS : " + status + " \n" +
                     "EMAIL : " + email + " \n" +
                     "LAST_MODIFIED : " + last_modified + "\n" +
-                    "Messages : " + messages.toString() + "\n";
+                    "Body : " + body.toString() + "\n";
 
         }
 
     }
 
+    class StatusBodyPlain {
+        public List<MsgStatusPlain> messages =  null;
+
+        @Override
+        public String toString() {
+            return "MESSAGES : " + messages.toString();
+        }
+    }
+
     class MsgStatusPlain {
-        public int id;
+        public String id;
         public String subject;
         public String snippet;
 
@@ -34,10 +43,18 @@ public interface StatusApi {
         public String toString() {
             return "MESSAGE: \n\t ID : " + id + "\n" +
                     "\t subject : " + subject + "\n" +
-                    "\t subject : " + snippet + "\n";
+                    "\t snippet : " + snippet + "\n";
+        }
+    }
+
+    class Filters {
+        Boolean unread;
+
+        public Filters(Boolean f) {
+            unread = f;
         }
     }
 
     @GET("/api/v1/messages/status")
-    Call<StatusPlain> getStatus(@Query("access_token") String token);
+    Call<StatusPlain> getStatus(@Query("access_token") String token, @Query("filters") Filters filters);
 }

@@ -35,8 +35,28 @@ public class MsgsRepo {
         return mRepo;
     }
 
+    public void refresh() {
+        Call<StatusApi.StatusPlain> call = mStatusApi.getStatus(AuthRepo.getInstance(mContext).getAccessToken(), new StatusApi.Filters(true));
+        call.enqueue(new Callback<StatusApi.StatusPlain>() {
+            @Override
+            public void onResponse(Call<StatusApi.StatusPlain> call, Response<StatusApi.StatusPlain> response) {
+                if (response.isSuccessful()) {
+                    StatusApi.StatusPlain status = response.body();
+                    if (status.status == 200) {
+                        Log.d("MY_APP", status.toString());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StatusApi.StatusPlain> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
     public void getStatus() {
-        Call<StatusApi.StatusPlain> call = mStatusApi.getStatus(AuthRepo.getInstance(mContext).getAccessToken());
+        Call<StatusApi.StatusPlain> call = mStatusApi.getStatus(AuthRepo.getInstance(mContext).getAccessToken(), new StatusApi.Filters(true));
         call.enqueue(new Callback<StatusApi.StatusPlain>() {
             @Override
             public void onResponse(Call<StatusApi.StatusPlain> call, Response<StatusApi.StatusPlain> response) {
@@ -57,7 +77,7 @@ public class MsgsRepo {
     }
 
     public void getLogin(final MutableLiveData<String> data) {
-        Call<StatusApi.StatusPlain> call = mStatusApi.getStatus(AuthRepo.getInstance(mContext).getAccessToken());
+        Call<StatusApi.StatusPlain> call = mStatusApi.getStatus(AuthRepo.getInstance(mContext).getAccessToken(), new StatusApi.Filters(true));
         call.enqueue(new Callback<StatusApi.StatusPlain>() {
             @Override
             public void onResponse(Call<StatusApi.StatusPlain> call, Response<StatusApi.StatusPlain> response) {
