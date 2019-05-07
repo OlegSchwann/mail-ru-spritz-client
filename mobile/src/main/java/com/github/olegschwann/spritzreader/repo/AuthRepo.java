@@ -16,6 +16,7 @@ public class AuthRepo {
     public static final String ACCESS_TOKEN = "accessToken";
     public static final String REFRESH_TOKEN = "refreshToken";
     public static final String AUTH_CODE = "authCode";
+    public static final String USER_EMAIL = "email";
 
     private final Context mContext;
     private static AuthRepo mRepo;
@@ -83,5 +84,16 @@ public class AuthRepo {
 
     public String getAccessToken() {
         return PreferenceManager.getDefaultSharedPreferences(mContext).getString(ACCESS_TOKEN, "");
+    }
+
+    public String getEmail() {
+        return PreferenceManager.getDefaultSharedPreferences(mContext).getString(USER_EMAIL, "");
+
+    }
+
+    public void saveEmail(String email) {
+        PreferenceManager.getDefaultSharedPreferences(mContext).edit()
+                .putString(USER_EMAIL, email)
+                .apply();
     }
 }

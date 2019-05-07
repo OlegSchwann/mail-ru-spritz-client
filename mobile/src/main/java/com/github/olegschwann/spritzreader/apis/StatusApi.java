@@ -1,10 +1,12 @@
 package com.github.olegschwann.spritzreader.apis;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 public interface StatusApi {
     class StatusPlain {
@@ -47,14 +49,6 @@ public interface StatusApi {
         }
     }
 
-    class Filters {
-        Boolean unread;
-
-        public Filters(Boolean f) {
-            unread = f;
-        }
-    }
-
     @GET("/api/v1/messages/status")
-    Call<StatusPlain> getStatus(@Query("access_token") String token, @Query("filters") Filters filters);
+    Call<StatusPlain> getStatus(@Query("access_token") String token, @QueryMap Map<String, Boolean> filters);
 }
