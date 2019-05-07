@@ -21,7 +21,7 @@ import ru.mail.auth.sdk.MailRuAuthSdk;
 import ru.mail.auth.sdk.MailRuCallback;
 import ru.mail.auth.sdk.ui.MailRuLoginButton;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ServiceStarter{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             Log.d("MY_APP","NEW FRAGMENTS");
             openLoginFragment();
+            openMsgsFragment();
         }
     }
 
@@ -37,5 +38,23 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.login_container, new LoginFragment())
                 .commit();
+    }
+
+    public void openMsgsFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.msgs_container, new MsgsFragment())
+                .commit();
+    }
+
+    @Override
+    public void startMsgsService() {
+        MsgsFragment fragment = (MsgsFragment)getSupportFragmentManager().findFragmentById(R.id.msgs_container);
+        fragment.startObesrving();
+    }
+
+    @Override
+    public void stopMsgsService() {
+        MsgsFragment fragment = (MsgsFragment)getSupportFragmentManager().findFragmentById(R.id.msgs_container);
+        fragment.stopObserving();
     }
 }

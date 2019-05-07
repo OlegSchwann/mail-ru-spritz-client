@@ -15,15 +15,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.olegschwann.spritzreader.ViewModels.LoginViewModel;
 import com.github.olegschwann.spritzreader.repo.AuthRepo;
+import com.github.olegschwann.spritzreader.repo.MsgsRepo;
 
 import ru.mail.auth.sdk.AuthError;
 import ru.mail.auth.sdk.AuthResult;
 import ru.mail.auth.sdk.MailRuAuthSdk;
 import ru.mail.auth.sdk.MailRuCallback;
+import ru.mail.mailapp.service.oauth.OAuthAccountInfo;
+import ru.mail.mailapp.service.oauth.OAuthInfo;
 
 
 public class LoginFragment extends Fragment {
@@ -39,7 +43,7 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mLoginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
@@ -51,6 +55,8 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        final TextView emailText = (TextView)view.findViewById(R.id.user_email);
+
         mLoginViewModel.getLoginState().observe(this, new Observer<LoginViewModel.LoginState>() {
             @Override
             public void onChanged(@Nullable LoginViewModel.LoginState loginState) {
@@ -59,8 +65,13 @@ public class LoginFragment extends Fragment {
                         if (!isLoggedIn()) {
                             startLoginFlow();
                         }
+                        Log.d("MY_APP", "NON LOGGED");
+                        ((ServiceStarter)getActivity()).stopMsgsService();
                         break;
                     case LOGGED:
+                        //MsgsRepo.getInstance(view.getContext()).getStatus();
+                        Log.d("MY_APP", "LOGGED");
+                        ((ServiceStarter)getActivity()).startMsgsService();
                         break;
                     default:
                         //TODO Error - msg
@@ -68,10 +79,17 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
+
+        mLoginViewModel.getUserEmail().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                emailText.setText(s);
+            }
+        });
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
         if(!MailRuAuthSdk.getInstance().handleActivityResult(requestCode, resultCode, data, new MailRuCallback<AuthResult, AuthError>() {
             @Override
             public void onResult(AuthResult result) {
@@ -83,7 +101,6 @@ public class LoginFragment extends Fragment {
                 Toast.makeText(getActivity(), error.getErrorReason() + " " + error.name(), Toast.LENGTH_LONG).show();
             }
         })) {
-            Log.d("MY_APP", "IN ON FRAGMENT");
             super.onActivityResult(requestCode, resultCode, data);
         }
     }

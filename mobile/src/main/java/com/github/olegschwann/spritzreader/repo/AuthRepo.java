@@ -47,6 +47,7 @@ public class AuthRepo {
     }
 
     public void saveResult(AuthResult result) {
+        Log.d("MY_APP", result.getAccess());
         PreferenceManager.getDefaultSharedPreferences(mContext).edit()
                 .putString(ACCESS_TOKEN, result.getAccess())
                 .putString(REFRESH_TOKEN, result.getRefresh())
@@ -78,5 +79,9 @@ public class AuthRepo {
             return mAuthCode;
         }
 
+    }
+
+    public String getAccessToken() {
+        return PreferenceManager.getDefaultSharedPreferences(mContext).getString(ACCESS_TOKEN, "");
     }
 }

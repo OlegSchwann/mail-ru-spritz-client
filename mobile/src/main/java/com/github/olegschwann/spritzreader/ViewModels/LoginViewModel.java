@@ -8,16 +8,24 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
+import com.github.olegschwann.spritzreader.apis.MsgsApi;
 import com.github.olegschwann.spritzreader.repo.AuthRepo;
+import com.github.olegschwann.spritzreader.repo.MsgsRepo;
 
 import ru.mail.auth.sdk.AuthResult;
 
 public class LoginViewModel extends AndroidViewModel {
     private MutableLiveData<LoginState> mLoginState = new MutableLiveData<>();
+    private MutableLiveData<String> mUserEmail = new MutableLiveData<>();
 
     public LoginViewModel(@NonNull Application application) {
         super(application);
-        mLoginState.setValue(LoginState.NONE);
+        if (isLoggedIn()) {
+            mLoginState.setValue(LoginState.LOGGED);
+        } else {
+            mLoginState.setValue(LoginState.NONE);
+        }
+        mUserEmail.setValue("user@email.com");
     }
 
     public enum LoginState {
@@ -32,6 +40,7 @@ public class LoginViewModel extends AndroidViewModel {
     public void saveResult(AuthResult result) {
         mLoginState.postValue(LoginState.LOGGED);
         AuthRepo.getInstance(getApplication()).saveResult(result);
+        MsgsRepo.getInstance(getApplication()).getLogin(mUserEmail);
     }
 
     public void logout() {
@@ -45,5 +54,9 @@ public class LoginViewModel extends AndroidViewModel {
 
     public LiveData<LoginState> getLoginState() {
         return mLoginState;
+    }
+
+    public LiveData<String> getUserEmail() {
+        return mUserEmail;
     }
 }
