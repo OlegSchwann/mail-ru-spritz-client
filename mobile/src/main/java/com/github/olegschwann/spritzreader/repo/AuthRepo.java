@@ -85,7 +85,6 @@ public class AuthRepo {
     public String getAccessToken() {
         return PreferenceManager.getDefaultSharedPreferences(mContext).getString(ACCESS_TOKEN, "");
     }
-
     public String getEmail() {
         return PreferenceManager.getDefaultSharedPreferences(mContext).getString(USER_EMAIL, "");
 

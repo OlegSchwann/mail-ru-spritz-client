@@ -2,6 +2,7 @@ package com.github.olegschwann.spritzreader;
 
 import android.app.IntentService;
 import android.app.Service;
+
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProvider;
@@ -26,7 +27,6 @@ public class MsgsService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d("MY_SERVICE", "ON START");
-
     }
 
     @Override

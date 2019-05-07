@@ -90,26 +90,6 @@ public class MsgsRepo {
         });
     }
 
-    /*public void getStatus() {
-        Call<StatusApi.StatusPlain> call = mStatusApi.getStatus(AuthRepo.getInstance(mContext).getAccessToken(), new StatusApi.Filters(true));
-        call.enqueue(new Callback<StatusApi.StatusPlain>() {
-            @Override
-            public void onResponse(Call<StatusApi.StatusPlain> call, Response<StatusApi.StatusPlain> response) {
-                if (response.isSuccessful()) {
-                    StatusApi.StatusPlain status = response.body();
-                    Log.d("MY_APP", "Hello " + response.message());
-                    if (status.status == 200) {
-                        //Log.d("MY_APP", response.body().toString());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<StatusApi.StatusPlain> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-    }*/
 
     public void getLogin(Callback<StatusApi.StatusPlain> callback) {
         Call<StatusApi.StatusPlain> call = mStatusApi.getStatus(AuthRepo.getInstance(mContext).getAccessToken(), new HashMap<String, Boolean>());
