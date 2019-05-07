@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.olegschwann.spritzreader.Types.NullBundleException;
 import com.github.olegschwann.spritzreader.host_activity.InteractionBus;
 import com.github.olegschwann.spritzreader.R;
 
@@ -21,9 +22,12 @@ public class FragmentSpritzReader extends Fragment {
 
     private InteractionBus mListener;
 
+    // Данные, которые будут отображаться на экране.
+    private Words words;
+
     // Итератор, выдающий слова письма по одному для отображения.
     // Содержит логику перемещения между предложениями.
-    private WordProvider words;
+    private WordProvider wordProvider;
 
     // Видимые элементы интерфейса.
     private TextView leftPart;
@@ -59,16 +63,33 @@ public class FragmentSpritzReader extends Fragment {
         // Required empty public constructor
     }
 
+    public void setWordsAndDelay(Words words, int delay) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Words.TAG, words);
+        bundle.putInt("delay", delay);
+        setArguments(bundle);
+    }
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.words = new WordProvider();
+        // region Recovery
+        Bundle bundle = getArguments();
+        if (bundle == null) {
+            throw new NullBundleException("Necessary to parameterize FragmentSpritzReader with setWordsAndDelay()");
+        }
+
+        this.words = bundle.getParcelable(Words.TAG);
+        this.delay = bundle.getInt("delay");
+        // endregion
+
+        this.wordProvider = new WordProvider(this.words);
         this.timerHandler = new Handler();
 
         this.changeToNextWord = new Runnable() {
             @Override
             public void run() {
-                int wordDelay = mChangeToNextWord();
+                int wordDelay = changeToNextWord();
                 if (demonstrationActive) {
                     timerHandler.postDelayed(this, wordDelay);
                 }
@@ -78,11 +99,11 @@ public class FragmentSpritzReader extends Fragment {
         this.toPreviousSentence = new Runnable() {
             @Override
             public void run() {
-                words.toPreviousSentence();
+                wordProvider.toPreviousSentence();
                 if (demonstrationActive) {
                     timerHandler.removeCallbacks(changeToNextWord);
                 }
-                mChangeToNextWord();
+                changeToNextWord();
                 if (demonstrationActive) {
                     timerHandler.postDelayed(changeToNextWord, 800);
                 }
@@ -104,24 +125,21 @@ public class FragmentSpritzReader extends Fragment {
         this.toNextSentence = new Runnable() {
             @Override
             public void run() {
-                words.toNextSentence();
+                wordProvider.toNextSentence();
                 if (demonstrationActive) {
                     timerHandler.removeCallbacks(changeToNextWord);
                 }
-                mChangeToNextWord();
+                changeToNextWord();
                 if (demonstrationActive) {
                     timerHandler.postDelayed(changeToNextWord, 800);
                 }
             }
         };
-
-        // TODO: нормальный внутренний интерфейс инициализации фрагмента, параметризуемый данными письма.
-        this.delay = 60 * 1000 / 500;
     }
 
-    private int mChangeToNextWord() {
+    private int changeToNextWord() {
         try {
-            Word word = words.next();
+            Word word = wordProvider.next();
             leftPart.setText(word.left); // text can be null
             centerLetter.setText(word.center);
             rightPart.setText(word.right);
@@ -165,7 +183,7 @@ public class FragmentSpritzReader extends Fragment {
         this.swipeDismiss = view.findViewById(R.id.spritz_swipe_dismiss_root);
         this.swipeDismiss.addCallback(new DismissCallback());
 
-        mChangeToNextWord(); // устанавливаем первое слово письма.
+        changeToNextWord(); // устанавливаем первое слово письма.
         // TODO:  добавить анимацию в начале чтения, как на spritz.com
         // Она должна сфокусировать человека посередине экрана.
         demonstrationActive = true;
