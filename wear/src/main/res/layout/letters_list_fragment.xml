@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.wear.widget.WearableRecyclerView
+<android.support.wear.widget.SwipeDismissFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/lettersList"
+    android:id="@+id/letters_list_swipe_dismiss_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbars="none"
-    tools:itemCount="20"
-    tools:listitem="@layout/letters_list_one_letter" />
+    android:layout_height="match_parent">
+
+    <android.support.wear.widget.WearableRecyclerView
+        android:id="@+id/lettersList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        tools:itemCount="20"
+        tools:listitem="@layout/letters_list_one_letter" />
+
+</android.support.wear.widget.SwipeDismissFrameLayout>

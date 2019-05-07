@@ -1,6 +1,5 @@
 package com.github.olegschwann.spritzreader.letters_list;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -8,40 +7,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.olegschwann.spritzreader.Letter;
 import com.github.olegschwann.spritzreader.R;
+import com.github.olegschwann.spritzreader.database.LettersHeaders;
 
-// https://stackoverflow.com/questions/26245139/how-to-create-recyclerview-with-multiple-view-type
 
 public class AdapterLetter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-    // TODO: хранить письма в SQLite.
-    private Letter[] letters;
-    private Context context;
+    private LettersHeaders letters;
 
     AdapterLetter() {
         // Required empty public constructor
     }
 
-    AdapterLetter(Context context, Letter[] data) {
-        this.context = context;
+    AdapterLetter(LettersHeaders data) {
         this.letters = data;
     }
 
+    // Позволяет поддерживать 3 типа элементов в списке.
+    // https://stackoverflow.com/questions/26245139/how-to-create-recyclerview-with-multiple-view-type
     @Override
     public int getItemViewType(int position) {
-        if (position == 0){
+        if (position == 0) {
             return LIST_TYPE.HEADER;
         }
         // letters:            [0, 1, 2, 3, 4]
         // real_items: [header, 0, 1, 2, 3, 4, button]
-        if (position == 1 + this.letters.length) {
+        if (position == 1 + this.letters.size()) {
             return LIST_TYPE.APPLICATION_BUTTON;
         }
-        if (position > 0 && position < 1 + this.letters.length ) {
+        if (position > 0 && position < 1 + this.letters.size()) {
             return LIST_TYPE.LETTER;
         }
-        Log.wtf("getItemViewType", "illegal getItemViewType(" + position +")");
+        Log.wtf("getItemViewType", "illegal getItemViewType(" + position + ")");
         throw new RuntimeException();
     }
 
@@ -72,20 +68,23 @@ public class AdapterLetter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             case LIST_TYPE.HEADER: {
                 ViewHolderHeader holderLetter = (ViewHolderHeader) holder;
 
-            } break;
+            }
+            break;
             case LIST_TYPE.LETTER: {
                 ViewHolderLetter holderLetter = (ViewHolderLetter) holder;
-                holderLetter.bind(letters[position - 1]);
-            } break;
+                holderLetter.bind(this.letters.get(position - 1));
+            }
+            break;
             case LIST_TYPE.APPLICATION_BUTTON: {
                 ViewHolderApplicationButton holderLetter = (ViewHolderApplicationButton) holder;
 
-            } break;
+            }
+            break;
         }
     }
 
     @Override
     public int getItemCount() {
-        return this.letters.length + 2;
+        return this.letters.size() + 2;
     }
 }

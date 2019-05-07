@@ -3,20 +3,21 @@ package com.github.olegschwann.spritzreader.letter_text;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.olegschwann.spritzreader.R;
-import com.github.olegschwann.spritzreader.TestData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdapterSentence extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public String[] sentences;
+    public ArrayList<String> sentences;
     public Context context;
 
-    AdapterSentence(Context context, String[] data) {
+    AdapterSentence(Context context, ArrayList<String> data) {
         this.context = context;
         this.sentences = data;
     }
@@ -28,10 +29,10 @@ public class AdapterSentence extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
         // sentences:             [0, 1, 2, 3, 4]
         // real_items: [alignment, 0, 1, 2, 3, 4, button]
-        if (position == 1 + this.sentences.length) {
+        if (position == 1 + this.sentences.size()) {
             return LIST_TYPE.APPLICATION_BUTTON;
         }
-        if (position > 0 && position < 1 + this.sentences.length ) {
+        if (position > 0 && position < 1 + this.sentences.size() ) {
             return LIST_TYPE.SENTENCE;
         }
         throw new RuntimeException();
@@ -67,7 +68,7 @@ public class AdapterSentence extends RecyclerView.Adapter<RecyclerView.ViewHolde
             } break;
             case LIST_TYPE.SENTENCE: {
                 ViewHolderSentence holderLetter = (ViewHolderSentence) holder;
-                holderLetter.bind(this.sentences[position - 1]);
+                holderLetter.bind(this.sentences.get(position - 1));
             } break;
             case LIST_TYPE.APPLICATION_BUTTON: {
                 ViewHolderApplicationButton holderLetter = (ViewHolderApplicationButton) holder;
@@ -78,6 +79,6 @@ public class AdapterSentence extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return this.sentences.length + 2;
+        return this.sentences.size() + 2;
     }
 }
