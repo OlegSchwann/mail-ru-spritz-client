@@ -21,7 +21,7 @@ public class ApiRepo {
         mOkHttpClient = new OkHttpClient().newBuilder().build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(MoshiConverterFactory.create())
+                .addConverterFactory(MoshiConverterFactory.create().asLenient())
                 .baseUrl(new HttpUrl.Builder().scheme("https")
                         .host("aj-https.mail.ru")
                         .build())
