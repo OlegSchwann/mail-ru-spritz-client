@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Spritz reader</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="new_msgs_label">новых сообщений</string>
+    <string name="null_msgs_count">0</string>
 </resources>
