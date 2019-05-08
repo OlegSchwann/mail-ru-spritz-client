@@ -52,7 +52,7 @@ public class MsgsRepo {
                         if (status.status == 200) {
                             for (int i = 0; i < status.body.messages.size(); i++) {
                                 Log.d("MY_APP", "IN LOOP");
-                                //getMsgById(status.body.messages.get(i).id);
+                                getMsgById(status.body.messages.get(i).id);
                                 msgsCount.postValue(status.body.messages.size());
                             }
                         }
