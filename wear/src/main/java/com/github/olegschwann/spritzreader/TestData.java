@@ -2,6 +2,7 @@ package com.github.olegschwann.spritzreader;
 
 import java.util.Arrays;
 import java.util.List;
+
 import com.github.olegschwann.spritzreader.database.Letter;
 
 public class TestData {

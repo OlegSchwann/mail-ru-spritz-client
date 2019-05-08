@@ -1,5 +1,8 @@
 package com.github.olegschwann.spritzreader.spritz_reader;
 
+import android.view.MotionEvent;
+import android.view.View;
+
 /* Распределение обработчиков нажатий на экране:
 □ □ □ □ □ ▤ ▩ ■ ■ ▩ ▤ □ □ □ □ □ ⎫
 □ □ □ ▨ ■ ■ ■ ■ ■ ■ ■ ■ ▧ □ □ □ ⎬ toPreviousSentence
@@ -18,9 +21,6 @@ package com.github.olegschwann.spritzreader.spritz_reader;
 □ □ □ ▧ ■ ■ ■ ■ ■ ■ ■ ■ ▨ □ □ □ ⎮
 □ □ □ □ □ ▤ ▩ ■ ■ ▩ ▤ □ □ □ □ □ ⎭
 Каждый обработчик занимает горизонтальную полосу заданной толщины.*/
-
-import android.view.MotionEvent;
-import android.view.View;
 
 public class ClickRouter implements View.OnTouchListener {
     private Runnable[] callMatrix;

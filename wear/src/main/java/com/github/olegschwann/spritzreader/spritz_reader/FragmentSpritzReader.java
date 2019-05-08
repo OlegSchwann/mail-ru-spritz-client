@@ -16,7 +16,6 @@ import com.github.olegschwann.spritzreader.Types.NullBundleException;
 import com.github.olegschwann.spritzreader.host_activity.InteractionBus;
 import com.github.olegschwann.spritzreader.R;
 
-
 public class FragmentSpritzReader extends Fragment {
     public static final String TAG = "SpritzReaderFragment";
 
@@ -43,6 +42,9 @@ public class FragmentSpritzReader extends Fragment {
     // Время демонстрации 1 слова в миллисекундах.
     private int delay;
 
+    // Позиция, с которой начинается отображение.
+    private int sentenceNumber;
+
     // Статус отображения: включена ли демонстрация в данный момент.
     private boolean demonstrationActive;
 
@@ -63,9 +65,10 @@ public class FragmentSpritzReader extends Fragment {
         // Required empty public constructor
     }
 
-    public void setWordsAndDelay(Words words, int delay) {
+    public void setWordsPositionDelay(Words words, int position, int delay) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Words.TAG, words);
+        bundle.putInt("sentenceNumber", position);
         bundle.putInt("delay", delay);
         setArguments(bundle);
     }
@@ -76,14 +79,16 @@ public class FragmentSpritzReader extends Fragment {
         // region Recovery
         Bundle bundle = getArguments();
         if (bundle == null) {
-            throw new NullBundleException("Necessary to parameterize FragmentSpritzReader with setWordsAndDelay()");
+            throw new NullBundleException("Necessary to parameterize FragmentSpritzReader with setWordsPositionDelay()");
         }
 
         this.words = bundle.getParcelable(Words.TAG);
+        this.sentenceNumber = bundle.getInt("sentenceNumber");
         this.delay = bundle.getInt("delay");
         // endregion
 
         this.wordProvider = new WordProvider(this.words);
+        this.wordProvider.setSentenceNumber(this.sentenceNumber);
         this.timerHandler = new Handler();
 
         this.changeToNextWord = new Runnable() {

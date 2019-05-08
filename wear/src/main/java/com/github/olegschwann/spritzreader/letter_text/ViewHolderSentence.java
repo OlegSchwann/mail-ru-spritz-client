@@ -9,13 +9,23 @@ import com.github.olegschwann.spritzreader.R;
 
 public class ViewHolderSentence extends RecyclerView.ViewHolder {
     private TextView sentence;
+    // Номер предложения, который надо веруть при нажатии.
+    private int position;
 
-    public ViewHolderSentence(@NonNull View itemView) {
+    public ViewHolderSentence(@NonNull View itemView, final SentenceClickListener listener) {
         super(itemView);
         this.sentence = itemView.findViewById(R.id.sentence);
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onClick(position);
+            }
+        });
     }
 
-    public void bind(String sentence) {
+    public void bind(String sentence, int position) {
+        this.position = position;
         this.sentence.setText(sentence);
     }
 }

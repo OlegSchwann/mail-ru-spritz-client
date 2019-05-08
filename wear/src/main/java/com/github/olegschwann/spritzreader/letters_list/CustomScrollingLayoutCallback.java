@@ -1,6 +1,5 @@
 package com.github.olegschwann.spritzreader.letters_list;
 
-
 import android.support.v7.widget.RecyclerView;
 import android.support.wear.widget.WearableLinearLayoutManager;
 import android.view.View;

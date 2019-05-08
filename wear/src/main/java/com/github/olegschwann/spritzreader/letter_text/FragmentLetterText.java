@@ -6,21 +6,21 @@ import android.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import java.util.ArrayList;
 
 import com.github.olegschwann.spritzreader.Types.NullBundleException;
 import com.github.olegschwann.spritzreader.host_activity.InteractionBus;
 import com.github.olegschwann.spritzreader.R;
 
-import java.util.ArrayList;
-
-public class FragmentLetterText extends Fragment {
+public class FragmentLetterText extends Fragment implements SentenceClickListener{
     public static final String TAG = "FullLetterTextFragment";
     private RecyclerView sentenceRecyclerView;
-    private InteractionBus mListener;
     private ArrayList<String> data;
+    private String letterId;
 
     public FragmentLetterText() {
         // Required empty public constructor
@@ -30,9 +30,10 @@ public class FragmentLetterText extends Fragment {
     // _до_ отрисовки экрана. Принимает список предложений.
     // Что бы их можно было запихать в android.os.Bundle,
     // все структуры из базы данных реализуют Parcelable.
-    public void setSentences(ArrayList<String> sentences) {
+    public void setSentences(ArrayList<String> sentences, String letterId) {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("sentences", sentences);
+        bundle.putString("letterId", letterId);
         setArguments(bundle);
     }
 
@@ -44,6 +45,7 @@ public class FragmentLetterText extends Fragment {
             throw new NullBundleException("Necessary to parameterize FragmentLetterText with setSentences()");
         }
         this.data = bundle.getStringArrayList("sentences");
+        this.letterId = bundle.getString("letterId");
     }
 
     @Override
@@ -54,7 +56,7 @@ public class FragmentLetterText extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         this.sentenceRecyclerView = view.findViewById(R.id.letter_text_list);
@@ -63,24 +65,26 @@ public class FragmentLetterText extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         this.sentenceRecyclerView.setLayoutManager(layoutManager);
 
-        AdapterSentence adapterSentence = new AdapterSentence(view.getContext(), this.data);
+        // this.onClick(sentenceNumber) будет вызвано при нажатии на предложение в списке.
+        AdapterSentence adapterSentence = new AdapterSentence(this.data, this);
         this.sentenceRecyclerView.setAdapter(adapterSentence);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof InteractionBus) {
-            mListener = (InteractionBus) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                + " must implement InteractionBus");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
+
+    // region SentenceClickListener
+    @Override
+    public void onClick(int sentenceIndex) {
+        ((InteractionBus)getActivity())
+            .transitionToSpritz(this.letterId, sentenceIndex);
+    }
+    // endregion
 }

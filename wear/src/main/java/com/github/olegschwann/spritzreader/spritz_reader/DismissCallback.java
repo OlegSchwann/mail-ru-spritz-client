@@ -2,7 +2,6 @@ package com.github.olegschwann.spritzreader.spritz_reader;
 
 import android.app.Activity;
 import android.support.wear.widget.SwipeDismissFrameLayout;
-import android.util.Log;
 
 public class DismissCallback extends SwipeDismissFrameLayout.Callback {
     @Override

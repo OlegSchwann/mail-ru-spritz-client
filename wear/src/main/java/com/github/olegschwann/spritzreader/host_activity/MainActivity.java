@@ -4,14 +4,16 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.app.FragmentTransaction;
 import android.support.wearable.activity.WearableActivity;
+import com.google.gson.Gson;
+import java.util.ArrayList;
 
 import com.github.olegschwann.spritzreader.R;
 import com.github.olegschwann.spritzreader.application.Application;
+import com.github.olegschwann.spritzreader.database.LettersHeaders;
 import com.github.olegschwann.spritzreader.letter_text.FragmentLetterText;
 import com.github.olegschwann.spritzreader.letters_list.FragmentLetterList;
 import com.github.olegschwann.spritzreader.spritz_reader.FragmentSpritzReader;
 import com.github.olegschwann.spritzreader.spritz_reader.Words;
-import com.google.gson.Gson;
 
 public class MainActivity extends WearableActivity implements InteractionBus {
     // 3 screen fragments
@@ -41,33 +43,17 @@ public class MainActivity extends WearableActivity implements InteractionBus {
             this.fragmentSpritzReader = new FragmentSpritzReader();
         }
 
-//        this.fragmentLetterList.setData(new LettersHeaders(((Application) this.getApplication()).database.letterDao().loadHeaders()));
-//        showLetterList(false);
+        // TODO: Тут жолжен быть роутер, открывающий или Spritz, или список.
+        this.fragmentLetterList.setData(new LettersHeaders(
+                ((Application) this.getApplication())
+                        .database
+                        .letterDao()
+                        .loadHeaders()));
+        showLetterList(false);
 
-        this.fragmentLetterText
-                .setSentences(
-                        ((Application)this.getApplication())
-                                .database
-                                .letterDao()
-                                .loadBody("1")
-                                .getSentenceBody()
-                );
-        showFullLetterText(false);
-
-//        this.fragmentSpritzReader.setWordsAndDelay(
-//                new Gson().fromJson(
-//                        ((Application)this.getApplication())
-//                                .database
-//                                .letterDao()
-//                                .loadBody("1")
-//                                .jsonBody,
-//                        Words.class
-//                ),
-//                60 * 1000 / 500
-//        );
-//        showSpritzReader(false);
     }
 
+    // region ShowFragment
     private void showLetterList(boolean addToHistory) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.content, this.fragmentLetterList, FragmentLetterList.TAG);
@@ -99,34 +85,56 @@ public class MainActivity extends WearableActivity implements InteractionBus {
         }
         transaction.commit();
     }
+    // endregion
 
-    // TODO: implement.
-
+    // region InteractionBus
     @Override
-    public void transitionToListOfLetters(int letterId) {
-        if (letterId == 0) {
-            // открыть первое письмо.
-        }
-        throw new NoSuchFieldError();
+    public void transitionToListOfLetters(String letterId) {
+        // TODO: use letterId.
+        this.fragmentLetterList.setData(new LettersHeaders(
+                ((Application) this.getApplication())
+                        .database
+                        .letterDao()
+                        .loadHeaders()));
+        showLetterList(true);
     }
 
     @Override
-    public void transitionToTextOfLetter(int letterId, int sentenceIndex) {
-        throw new NoSuchFieldError();
+    public void transitionToTextOfLetter(String letterId, int sentenceIndex) {
+        // TODO: use sentenceIndex.
+        ArrayList<String> sentenceBody = ((Application) this.getApplication())
+                .database
+                .letterDao()
+                .loadBody(letterId)
+                .getSentenceBody();
+        this.fragmentLetterText.setSentences(sentenceBody, letterId);
+        showFullLetterText(true);
     }
 
     @Override
-    public void transitionToSpritz(int letterId, int sentenceIndex) {
-        throw new NoSuchFieldError();
+    public void transitionToSpritz(String letterId, int sentenceIndex) {
+        // TODO: use sentenceIndex.
+        Words words = new Gson().fromJson(
+             ((Application) this.getApplication())
+                 .database
+                 .letterDao()
+                 .loadBody(letterId)
+                 .jsonBody,
+             Words.class);
+        this.fragmentSpritzReader.setWordsPositionDelay(words, sentenceIndex, 60 * 1000 / 500);
+        this.showSpritzReader(true);
     }
 
     @Override
-    public void transitionToTextOfLetterOnPhone(int letterId) {
+    public void transitionToTextOfLetterOnPhone(String letterId) {
+        // TODO: implement.
         throw new NoSuchFieldError();
     }
 
     @Override
     public void transitionToListOfLettersOnPhone() {
+        // TODO: implement.
         throw new NoSuchFieldError();
     }
+    // endregion
 }

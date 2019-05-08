@@ -3,12 +3,10 @@ package com.github.olegschwann.spritzreader.database;
 import android.arch.persistence.room.ColumnInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.github.olegschwann.spritzreader.spritz_reader.Word;
+import java.util.ArrayList;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.github.olegschwann.spritzreader.spritz_reader.Word;
 
 public class LetterBody implements Parcelable {
     @ColumnInfo(name = "id")

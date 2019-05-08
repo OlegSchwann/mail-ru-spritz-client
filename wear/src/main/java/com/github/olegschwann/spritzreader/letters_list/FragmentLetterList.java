@@ -18,7 +18,7 @@ import com.github.olegschwann.spritzreader.host_activity.InteractionBus;
 import com.github.olegschwann.spritzreader.R;
 
 
-public class FragmentLetterList extends Fragment {
+public class FragmentLetterList extends Fragment implements LetterClickListener{
     public static final String TAG = "LetterListrFragment";
 
     // Список всех писем.
@@ -27,12 +27,8 @@ public class FragmentLetterList extends Fragment {
     // Синяя кнопка с логотипом mail.ru, открывает список писем в приложении на телефоне.
     private ImageButton toMobileApplication;
 
-    // Ссылка на Activity, через которую фрагменты меняют экраы приложения.
-    private InteractionBus mListener;
-
     // Заголовки писем, которые надо отобразить.
     private LettersHeaders data;
-
 
     public FragmentLetterList() {
         // Required empty public constructor
@@ -75,24 +71,25 @@ public class FragmentLetterList extends Fragment {
         WearableLinearLayoutManager layoutManager = new WearableLinearLayoutManager(view.getContext(), customScrollingLayoutCallback);
         this.lettersRecyclerView.setLayoutManager(layoutManager);
 
-        this.lettersRecyclerView.setAdapter(new AdapterLetter(this.data));
+        // this.onClick(letterId) вызывается при нажатии на письмо.
+        this.lettersRecyclerView.setAdapter(new AdapterLetter(this.data, this));
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof InteractionBus) {
-            mListener = (InteractionBus) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement InteractionBus");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
+    // region LetterClickListener
+    @Override
+    public void onClick(String letterId) {
+        ((InteractionBus)this.getActivity())
+            .transitionToTextOfLetter(letterId, 0);
+    }
+    // endregion
 }

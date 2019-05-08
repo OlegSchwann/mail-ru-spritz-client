@@ -10,16 +10,18 @@ import android.view.ViewGroup;
 import com.github.olegschwann.spritzreader.R;
 import com.github.olegschwann.spritzreader.database.LettersHeaders;
 
-
 public class AdapterLetter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private LettersHeaders letters;
+
+    private LetterClickListener listener;
 
     AdapterLetter() {
         // Required empty public constructor
     }
 
-    AdapterLetter(LettersHeaders data) {
+    AdapterLetter(LettersHeaders data, LetterClickListener listener) {
         this.letters = data;
+        this.listener = listener;
     }
 
     // Позволяет поддерживать 3 типа элементов в списке.
@@ -52,7 +54,7 @@ public class AdapterLetter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
             case LIST_TYPE.LETTER: {
                 View view = layoutInflater.inflate(R.layout.letters_list_one_letter, parent, false);
-                return new ViewHolderLetter(view);
+                return new ViewHolderLetter(view, this.listener);
             }
             case LIST_TYPE.APPLICATION_BUTTON: {
                 View view = layoutInflater.inflate(R.layout.letters_list_mail_ru_button, parent, false);

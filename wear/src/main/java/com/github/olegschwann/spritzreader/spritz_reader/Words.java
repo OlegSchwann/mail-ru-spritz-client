@@ -2,7 +2,6 @@ package com.github.olegschwann.spritzreader.spritz_reader;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import java.util.ArrayList;
 
 public class Words extends ArrayList<ArrayList<Word>> implements Parcelable {
