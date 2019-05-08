@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.wear.widget.SwipeDismissFrameLayout;
 import android.support.wear.widget.WearableLinearLayoutManager;
 import android.support.wear.widget.WearableRecyclerView;
 import android.view.LayoutInflater;
@@ -23,6 +24,8 @@ public class FragmentLetterList extends Fragment implements LetterClickListener{
 
     // Список всех писем.
     private WearableRecyclerView lettersRecyclerView;
+
+    private SwipeDismissFrameLayout swipeDismissFrameLayout;
 
     // Синяя кнопка с логотипом mail.ru, открывает список писем в приложении на телефоне.
     private ImageButton toMobileApplication;
@@ -73,6 +76,14 @@ public class FragmentLetterList extends Fragment implements LetterClickListener{
 
         // this.onClick(letterId) вызывается при нажатии на письмо.
         this.lettersRecyclerView.setAdapter(new AdapterLetter(this.data, this));
+
+        this.swipeDismissFrameLayout = view.findViewById(R.id.letters_list_swipe_dismiss_root);
+        this.swipeDismissFrameLayout.addCallback(new SwipeDismissFrameLayout.Callback() {
+            @Override
+            public void onDismissed(SwipeDismissFrameLayout layout) {
+                ((InteractionBus)getActivity()).dismiss();
+            }
+        });
     }
 
     @Override

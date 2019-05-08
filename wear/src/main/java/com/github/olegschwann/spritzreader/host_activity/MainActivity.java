@@ -126,6 +126,11 @@ public class MainActivity extends WearableActivity implements InteractionBus {
     }
 
     @Override
+    public void dismiss() {
+        this.onBackPressed();
+    }
+
+    @Override
     public void transitionToTextOfLetterOnPhone(String letterId) {
         // TODO: implement.
         throw new NoSuchFieldError();

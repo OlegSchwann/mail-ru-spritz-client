@@ -6,7 +6,7 @@ import android.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.wear.widget.SwipeDismissFrameLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +18,13 @@ import com.github.olegschwann.spritzreader.R;
 
 public class FragmentLetterText extends Fragment implements SentenceClickListener{
     public static final String TAG = "FullLetterTextFragment";
+
     private RecyclerView sentenceRecyclerView;
+
+    private SwipeDismissFrameLayout swipeDismissFrameLayout;
+
     private ArrayList<String> data;
+
     private String letterId;
 
     public FragmentLetterText() {
@@ -68,6 +73,14 @@ public class FragmentLetterText extends Fragment implements SentenceClickListene
         // this.onClick(sentenceNumber) будет вызвано при нажатии на предложение в списке.
         AdapterSentence adapterSentence = new AdapterSentence(this.data, this);
         this.sentenceRecyclerView.setAdapter(adapterSentence);
+
+        this.swipeDismissFrameLayout = view.findViewById(R.id.letter_text_swipe_dismiss_root);
+        this.swipeDismissFrameLayout.addCallback(new SwipeDismissFrameLayout.Callback() {
+            @Override
+            public void onDismissed(SwipeDismissFrameLayout layout) {
+                ((InteractionBus)getActivity()).dismiss();
+            }
+        });
     }
 
     @Override

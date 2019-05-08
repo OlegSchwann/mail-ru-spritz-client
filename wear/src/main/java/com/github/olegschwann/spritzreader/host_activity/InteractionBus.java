@@ -11,6 +11,9 @@ public interface InteractionBus {
 
     void transitionToSpritz(String letterId, int sentenceIndex);
 
+    // Закрывает текущий фрагмент, откатывает транзакцию.
+    void dismiss();
+
     void transitionToTextOfLetterOnPhone(String letterId);
 
     void transitionToListOfLettersOnPhone();

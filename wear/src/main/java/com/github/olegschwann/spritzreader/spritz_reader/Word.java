@@ -21,7 +21,7 @@ public class Word implements Parcelable{
 
     @Nullable
     @SerializedName("d")
-    public Integer delay;
+    public Float delay;
 
     //region Parcelable
     private Word(Parcel in) {
@@ -31,8 +31,8 @@ public class Word implements Parcelable{
 
         this.right = in.readString();
 
-        @Nullable int delay = in.readInt();
-        this.delay = (delay == 1 ? null : delay);
+        @Nullable float delay = in.readFloat();
+        this.delay = (delay == 1f ? null : delay);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class Word implements Parcelable{
 
         // delay - множитель относительно установленного времени демонстрации.
         // 1 - нейтральный элемент.
-        dest.writeInt(this.delay != null ? this.delay : 1);
+        dest.writeFloat(this.delay != null ? this.delay : 1f);
     }
 
     public static final Parcelable.Creator<Word> CREATOR

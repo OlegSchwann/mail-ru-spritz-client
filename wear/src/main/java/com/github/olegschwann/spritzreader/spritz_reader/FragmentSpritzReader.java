@@ -19,7 +19,16 @@ import com.github.olegschwann.spritzreader.R;
 public class FragmentSpritzReader extends Fragment {
     public static final String TAG = "SpritzReaderFragment";
 
-    private InteractionBus mListener;
+    // Видимые элементы интерфейса.
+    private TextView leftPart;
+
+    private TextView centerLetter;
+
+    private TextView rightPart;
+
+    private View spritzScreen;
+
+    private SwipeDismissFrameLayout swipeDismissFrameLayout;
 
     // Данные, которые будут отображаться на экране.
     private Words words;
@@ -27,13 +36,6 @@ public class FragmentSpritzReader extends Fragment {
     // Итератор, выдающий слова письма по одному для отображения.
     // Содержит логику перемещения между предложениями.
     private WordProvider wordProvider;
-
-    // Видимые элементы интерфейса.
-    private TextView leftPart;
-    private TextView centerLetter;
-    private TextView rightPart;
-    private View spritzScreen;
-    private SwipeDismissFrameLayout swipeDismiss;
 
     // Очередь, управляющая событиями времени.
     // Ей ставятся задачи "вызови это через секунду."
@@ -164,7 +166,8 @@ public class FragmentSpritzReader extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.spritz_reader_fragment, container, false);
@@ -180,14 +183,20 @@ public class FragmentSpritzReader extends Fragment {
 
         this.spritzScreen = (View) view.findViewById(R.id.spritz_screen);
         this.spritzScreen.setOnTouchListener(new ClickRouter(
-                this.toPreviousSentence,
-                this.stopOrStartDemonstration,
-                this.toNextSentence
+            this.toPreviousSentence,
+            this.stopOrStartDemonstration,
+            this.toNextSentence
         ));
 
-        this.swipeDismiss = view.findViewById(R.id.spritz_swipe_dismiss_root);
-        this.swipeDismiss.addCallback(new DismissCallback());
+        this.swipeDismissFrameLayout = view.findViewById(R.id.spritz_swipe_dismiss_root);
+        this.swipeDismissFrameLayout.addCallback(new SwipeDismissFrameLayout.Callback() {
+            @Override
+            public void onDismissed(SwipeDismissFrameLayout layout) {
+                ((InteractionBus)getActivity()).dismiss();
+            }
+        });
 
+        // TODO: может быть баг или перезатирание. Нужно ли это?
         changeToNextWord(); // устанавливаем первое слово письма.
         // TODO:  добавить анимацию в начале чтения, как на spritz.com
         // Она должна сфокусировать человека посередине экрана.
@@ -198,17 +207,10 @@ public class FragmentSpritzReader extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof InteractionBus) {
-            mListener = (InteractionBus) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement InteractionBus");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 }
