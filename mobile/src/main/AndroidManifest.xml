@@ -14,10 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name=".MsgsServic"
+            android:name=".MsgsService"
             android:enabled="true"
             android:exported="true"></service>
-        <service android:name=".MsgsService" />
 
         <activity android:name=".MainActivity">
             <intent-filter>
