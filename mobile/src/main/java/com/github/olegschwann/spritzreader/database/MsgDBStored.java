@@ -20,8 +20,6 @@ public class MsgDBStored {
         mBody = body;
     }
 
-    //public MsgDBStored() {}
-
     public String getId() {
         return mId;
     }

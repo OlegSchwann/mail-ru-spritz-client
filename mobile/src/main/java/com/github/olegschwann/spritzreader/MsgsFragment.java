@@ -50,10 +50,10 @@ public class MsgsFragment extends Fragment {
     }
 
     public void startObesrving() {
-        mMsgsViewModel.startObserving(getActivity());
+        mMsgsViewModel.startObserving();
     }
 
     public void stopObserving() {
-        mMsgsViewModel.stopObserving(getActivity());
+        mMsgsViewModel.stopObserving();
     }
 }
