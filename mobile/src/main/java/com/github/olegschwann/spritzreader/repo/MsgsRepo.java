@@ -12,6 +12,7 @@ import com.squareup.moshi.JsonDataException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,6 +23,9 @@ public class MsgsRepo {
     private final Context mContext;
     private final MsgsApi mMsgsApi;
     private final StatusApi mStatusApi;
+    private Thread mWorkingThread;
+
+    private final int mRefreshDelay = 10;
 
     private static MsgsRepo mRepo;
 
@@ -52,7 +56,7 @@ public class MsgsRepo {
                         if (status.status == 200) {
                             for (int i = 0; i < status.body.messages.size(); i++) {
                                 Log.d("MY_APP", "IN LOOP");
-                                //getMsgById(status.body.messages.get(i).id);
+                                getMsgById(status.body.messages.get(i).id);
                                 msgsCount.postValue(status.body.messages.size());
                             }
                         }
@@ -94,5 +98,27 @@ public class MsgsRepo {
     public void getLogin(Callback<StatusApi.StatusPlain> callback) {
         Call<StatusApi.StatusPlain> call = mStatusApi.getStatus(AuthRepo.getInstance(mContext).getAccessToken(), new HashMap<String, Boolean>());
         call.enqueue(callback);
+    }
+
+    public void startObserving(final MutableLiveData<Integer> msgsCount) {
+        mWorkingThread = new Thread(new Runnable() {
+            public void run() {
+                while (!mWorkingThread.isInterrupted()) {
+                    refresh(msgsCount);
+                    try {
+                        TimeUnit.SECONDS.sleep(mRefreshDelay);
+                    } catch (InterruptedException e) {
+                        break;
+                    }
+                }
+            }
+        });
+        mWorkingThread.start();
+    }
+
+    public void stopObserving() {
+        if (mWorkingThread != null) {
+            mWorkingThread.interrupt();
+        }
     }
 }
