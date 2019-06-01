@@ -192,6 +192,9 @@ public class FragmentSpritzReader extends Fragment {
         this.swipeDismissFrameLayout.addCallback(new SwipeDismissFrameLayout.Callback() {
             @Override
             public void onDismissed(SwipeDismissFrameLayout layout) {
+                if (demonstrationActive) {
+                    timerHandler.removeCallbacks(changeToNextWord);
+                }
                 ((InteractionBus)getActivity()).dismiss();
             }
         });
